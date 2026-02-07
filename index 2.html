@@ -1,0 +1,476 @@
+export default {
+  async fetch(request) {
+    const url = new URL(request.url);
+
+    if (url.pathname === "/favicon.ico") {
+      return new Response(null, { status: 204 });
+    }
+
+    if (url.pathname === "/" || url.pathname === "/index.html") {
+      return new Response(HTML, {
+        headers: {
+          "content-type": "text/html; charset=utf-8",
+          "cache-control": "public, max-age=300",
+        },
+      });
+    }
+
+    return new Response("404 - Not Found", {
+      status: 404,
+      headers: { "content-type": "text/plain; charset=utf-8" },
+    });
+  },
+};
+
+const HTML = `<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Konsultasi Akademik</title>
+  <meta name="description" content="Konsultasi dan pendampingan akademik serta artikel ilmiah dengan proses yang jelas dan komunikasi profesional." />
+
+  <style>
+    :root{
+      --bg:#070A0F;
+      --text:#F3F7FF;
+      --text-2: rgba(243,247,255,.92);
+      --teal:#2dd4bf;
+      --cyan:#38bdf8;
+      --max: 1180px;
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      color:var(--text);
+      background: var(--bg);
+      overflow-x:hidden;
+      line-height:1.55;
+    }
+    a{color:inherit;text-decoration:none}
+    .wrap{max-width:var(--max);margin:0 auto;padding:0 18px}
+
+    .bg{
+      position:fixed; inset:0; z-index:-6;
+      background:
+        radial-gradient(920px 560px at 78% 18%, rgba(45,212,191,.18), transparent 62%),
+        radial-gradient(980px 620px at 18% 82%, rgba(56,189,248,.10), transparent 62%),
+        linear-gradient(180deg, #05070b, #070a0f);
+    }
+    .drift{
+      position:fixed; inset:-55%; z-index:-5;
+      background:
+        radial-gradient(circle at 35% 40%, rgba(45,212,191,.12), transparent 52%),
+        radial-gradient(circle at 70% 65%, rgba(56,189,248,.08), transparent 58%);
+      filter: blur(92px);
+      opacity:.14;
+      transform: translate3d(0,0,0);
+      animation: drift 34s ease-in-out infinite;
+      pointer-events:none;
+    }
+    @keyframes drift{
+      0%,100%{ transform: translate3d(-6px, 4px, 0) scale(1.01); }
+      50%{ transform: translate3d(6px, -6px, 0) scale(1.02); }
+    }
+
+    header{
+      position:sticky; top:0; z-index:50;
+      backdrop-filter: blur(10px);
+      background: rgba(7,10,15,.62);
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+    .head{display:flex; align-items:center; justify-content:center; padding:12px 0;}
+    .logo{display:inline-flex; align-items:center; justify-content:center; height:42px;}
+    .logo svg{height:42px;width:auto;display:block}
+
+    .hero{padding:72px 0 26px; text-align:center}
+    h1{
+      margin:14px 0 12px;
+      font-size:48px;
+      line-height:1.08;
+      letter-spacing:.6px;
+      font-weight:1000;
+      text-transform: uppercase;
+      color: var(--text);
+    }
+    @media (max-width:520px){ h1{font-size:34px} }
+
+    .sub{
+      margin:0 auto;
+      color: var(--text-2);
+      max-width: 74ch;
+      font-size: 16px;
+    }
+
+    .cta{margin-top:24px; display:flex; justify-content:center;}
+
+    .btn{
+      display:inline-flex; align-items:center; justify-content:center;
+      padding:13px 20px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.16);
+      background: rgba(255,255,255,.06);
+      color: var(--text);
+      font-weight:950;
+      cursor:pointer;
+      position:relative;
+      overflow:hidden;
+      user-select:none;
+      -webkit-tap-highlight-color: transparent;
+      transition: transform .18s ease, box-shadow .18s ease, background .18s ease, border-color .18s ease;
+      will-change: transform;
+    }
+
+    .btn.primary{
+      border-color: rgba(255,255,255,.10);
+      background: linear-gradient(135deg, rgba(45,212,191,.92), rgba(56,189,248,.92));
+      color:#041014;
+      box-shadow: 0 18px 55px rgba(45,212,191,.14), 0 10px 30px rgba(0,0,0,.30);
+      transform: translateZ(0);
+    }
+
+    /* Premium animated outline (mobile friendly) */
+    .btn.primary::after{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      border-radius:999px;
+      padding:2px;
+      background: conic-gradient(
+        from 0deg,
+        rgba(255,255,255,0.0),
+        rgba(255,255,255,0.55),
+        rgba(255,255,255,0.0),
+        rgba(45,212,191,0.65),
+        rgba(255,255,255,0.0),
+        rgba(56,189,248,0.70),
+        rgba(255,255,255,0.0)
+      );
+      -webkit-mask:
+        linear-gradient(#000 0 0) content-box,
+        linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      opacity:.80;
+      animation: spin 3.8s linear infinite;
+      pointer-events:none;
+    }
+    @keyframes spin{ to{ transform: rotate(360deg); } }
+
+    .btn.primary::before{
+      content:"";
+      position:absolute; inset:-60%;
+      background: linear-gradient(120deg, transparent, rgba(255,255,255,.24), transparent);
+      transform: translateX(-55%) rotate(18deg);
+      opacity:0;
+      animation: sheen 6.7s ease-in-out infinite;
+      pointer-events:none;
+    }
+    @keyframes sheen{
+      0%,72%{ transform: translateX(-55%) rotate(18deg); opacity:0; }
+      80%{ opacity:.14; }
+      100%{ transform: translateX(55%) rotate(18deg); opacity:0; }
+    }
+
+    .btn.primary:hover{
+      transform: translateY(-1px);
+      box-shadow: 0 22px 70px rgba(45,212,191,.16), 0 14px 36px rgba(0,0,0,.34);
+    }
+    .btn.primary:active{ transform: translateY(0); }
+
+    @media (max-width:520px){
+      .btn.primary::after{ animation-duration: 4.8s; opacity:.72; }
+      .btn{ padding:12px 18px; }
+    }
+
+    .section{padding:34px 0}
+    .section-title{
+      margin:0 0 8px;
+      font-size:22px;
+      font-weight:950;
+      text-align:center;
+      color: var(--text);
+    }
+    .section-desc{
+      margin:0 auto 16px;
+      color: var(--text-2);
+      text-align:center;
+      max-width: 78ch;
+      font-size:16px;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 360px));
+      gap:16px;
+      margin-top: 18px;
+      justify-content:center;
+    }
+
+    .price{
+      border:1px solid rgba(255,255,255,.16);
+      border-radius: 18px;
+      background: rgba(255,255,255,.07);
+      padding:20px;
+      transition: transform .18s ease, border-color .18s ease;
+    }
+    .price:hover{ transform: translateY(-2px); border-color: rgba(45,212,191,.28); }
+
+    .tag{
+      display:inline-flex;
+      padding:7px 12px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.18);
+      background: rgba(0,0,0,.22);
+      color: var(--text-2);
+      font-size:13px;
+      text-transform: uppercase;
+      letter-spacing:.6px;
+      font-weight:900;
+    }
+    .amount{ margin:12px 0 12px; font-weight:1000; font-size:20px; color: var(--text); }
+
+    .list{
+      margin:0; padding:0; list-style:none;
+      color: var(--text-2);
+      font-size:14px;
+      display:grid; gap:9px;
+    }
+    .li{display:flex; gap:8px; align-items:flex-start}
+    .check{
+      width:18px; height:18px; border-radius:6px;
+      background: linear-gradient(135deg, var(--teal), var(--cyan));
+      color:#041014;
+      display:inline-flex; align-items:center; justify-content:center;
+      font-weight:1000; flex:0 0 auto; margin-top:1px;
+      box-shadow: 0 10px 22px rgba(45,212,191,.10);
+    }
+
+    /* APC note: no check + smaller text */
+    .note{
+      margin-top:10px;
+      font-size:12px;
+      color: rgba(243,247,255,.78);
+      letter-spacing:.2px;
+    }
+
+    details{
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.05);
+      border-radius: 16px;
+      padding:12px 14px;
+      max-width:860px;
+      margin:0 auto;
+    }
+    details + details{ margin-top:10px; }
+    summary{cursor:pointer; font-weight:950; color: var(--text)}
+    details p{color: var(--text-2); margin:8px 0 0}
+
+    footer{
+      border-top:1px solid rgba(255,255,255,.10);
+      padding:22px 0 32px;
+      color: var(--text-2);
+      font-size:13px;
+      text-align:center;
+    }
+
+    .bottom-actions{display:flex; justify-content:center; padding: 18px 0 6px;}
+    .btn.backtop{
+      background: rgba(255,255,255,.10);
+      border-color: rgba(255,255,255,.18);
+      color: var(--text);
+      box-shadow:none;
+      padding:12px 18px;
+    }
+    .btn.backtop:hover{
+      background: rgba(255,255,255,.13);
+      border-color: rgba(255,255,255,.26);
+      transform: translateY(-1px);
+    }
+
+    .reveal{ opacity:0; transform: translateY(10px); transition: opacity .6s ease, transform .6s ease; }
+    .reveal.show{opacity:1; transform: translateY(0)}
+
+    @media (prefers-reduced-motion: reduce){
+      *{animation:none!important;transition:none!important}
+      html{scroll-behavior:auto}
+      .reveal{opacity:1; transform:none}
+    }
+  </style>
+</head>
+
+<body>
+  <div class="bg" aria-hidden="true"></div>
+  <div class="drift" aria-hidden="true"></div>
+
+  <header>
+    <div class="wrap head">
+      <div class="logo" aria-label="Logo">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+          <defs>
+            <linearGradient id="g" x1="10" y1="10" x2="54" y2="54" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#2DD4BF"/>
+              <stop offset="1" stop-color="#38BDF8"/>
+            </linearGradient>
+            <filter id="s" x="-30%" y="-30%" width="160%" height="160%">
+              <feDropShadow dx="0" dy="10" stdDeviation="10" flood-color="#2DD4BF" flood-opacity="0.16"/>
+            </filter>
+          </defs>
+          <g filter="url(#s)">
+            <path d="M32 9c-12.7 0-23 10.3-23 23s10.3 23 23 23 23-10.3 23-23S44.7 9 32 9Z"
+                  fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.16)"/>
+            <path d="M21 36c6.5-10.8 15.2-16.2 25-16.2"
+                  stroke="url(#g)" stroke-width="3.2" stroke-linecap="round"/>
+            <path d="M23 40c8.1 6.5 16.8 8.4 24.8 4.3"
+                  stroke="url(#g)" stroke-width="3.2" stroke-linecap="round" opacity="0.92"/>
+            <path d="M25 26c2.2 2.2 4.9 3.2 8 3.2"
+                  stroke="rgba(56,189,248,0.9)" stroke-width="3.2" stroke-linecap="round" opacity="0.55"/>
+          </g>
+        </svg>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" id="top">
+      <div class="wrap">
+        <h1 class="reveal">Konsultasi & Pendampingan Akademik</h1>
+        <p class="sub reveal">Pendampingan terarah untuk kebutuhan akademik dan artikel ilmiah, dengan proses yang jelas dan komunikasi profesional.</p>
+
+        <div class="cta reveal" id="cta">
+          <a class="btn primary" href="https://forms.gle/PtWeAaTNycjqujRG7" target="_blank" rel="noopener">
+            Ajukan Konsultasi
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="akademik">
+      <div class="wrap">
+        <div class="reveal">
+          <h2 class="section-title">Konsultasi Akademik</h2>
+          <p class="section-desc">Pilihan layanan untuk Skripsi (S1), Thesis (S2), dan Disertasi (S3).</p>
+        </div>
+
+        <div class="grid">
+          <div class="price reveal">
+            <div class="tag">Skripsi — S1</div>
+            <div class="amount">Rp. 4.000.000 – Rp. 7.500.000</div>
+            <ul class="list">
+              <li class="li"><span class="check">✓</span>Revisi terstruktur</li>
+              <li class="li"><span class="check">✓</span>Turnitin 1x (target &lt;15%)</li>
+              <li class="li"><span class="check">✓</span>Pendampingan secara daring</li>
+              <li class="li"><span class="check">✓</span>Bimbingan sesuai scope</li>
+            </ul>
+          </div>
+
+          <div class="price reveal">
+            <div class="tag">Thesis — S2</div>
+            <div class="amount">Rp. 8.000.000 – Rp. 14.500.000</div>
+            <ul class="list">
+              <li class="li"><span class="check">✓</span>Revisi terstruktur</li>
+              <li class="li"><span class="check">✓</span>Turnitin 1x (target &lt;15%)</li>
+              <li class="li"><span class="check">✓</span>Pendampingan secara daring</li>
+              <li class="li"><span class="check">✓</span>Bimbingan sesuai scope</li>
+            </ul>
+          </div>
+
+          <div class="price reveal">
+            <div class="tag">Disertasi — S3</div>
+            <div class="amount">Rp. 15.000.000 – Rp. 30.000.000</div>
+            <ul class="list">
+              <li class="li"><span class="check">✓</span>Revisi terstruktur</li>
+              <li class="li"><span class="check">✓</span>Turnitin 1x (target &lt;15%)</li>
+              <li class="li"><span class="check">✓</span>Pendampingan secara daring</li>
+              <li class="li"><span class="check">✓</span>Bimbingan sesuai scope</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="artikel">
+      <div class="wrap">
+        <div class="reveal">
+          <h2 class="section-title">Konsultasi Artikel Ilmiah</h2>
+          <p class="section-desc">Pendampingan untuk target jurnal SINTA atau SCOPUS sesuai kebutuhan.</p>
+        </div>
+
+        <div class="grid">
+          <div class="price reveal">
+            <div class="tag">SINTA</div>
+            <div class="amount">Rp. 500.000 – Rp. 3.000.000</div>
+            <ul class="list">
+              <li class="li"><span class="check">✓</span>Revisi terstruktur</li>
+              <li class="li"><span class="check">✓</span>Turnitin 1x</li>
+              <li class="li"><span class="check">✓</span>Analisis data sesuai scope</li>
+              <li class="li"><span class="check">✓</span>Pendampingan submit ke jurnal target</li>
+            </ul>
+            <div class="note">*APC tidak termasuk</div>
+          </div>
+
+          <div class="price reveal">
+            <div class="tag">SCOPUS</div>
+            <div class="amount">Rp. 7.500.000 – Rp. 25.000.000</div>
+            <ul class="list">
+              <li class="li"><span class="check">✓</span>Revisi terstruktur</li>
+              <li class="li"><span class="check">✓</span>Turnitin 1x</li>
+              <li class="li"><span class="check">✓</span>Analisis data sesuai scope</li>
+              <li class="li"><span class="check">✓</span>Pendampingan submit ke jurnal target</li>
+            </ul>
+            <div class="note">*APC tidak termasuk</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="ketentuan">
+      <div class="wrap">
+        <div class="reveal">
+          <h2 class="section-title">Ketentuan Layanan</h2>
+          <p class="section-desc">Ringkasan untuk menjaga kejelasan proses.</p>
+        </div>
+
+        <details class="reveal">
+          <summary>Proses dan konfirmasi</summary>
+          <p>Pengajuan dilakukan melalui formulir. Ruang lingkup dan timeline disepakati sebelum pendampingan dimulai.</p>
+        </details>
+
+        <details class="reveal">
+          <summary>Komunikasi dan durasi</summary>
+          <p>Pendampingan dilakukan secara daring. Estimasi durasi mengikuti kompleksitas dan kesiapan data.</p>
+        </details>
+
+        <details class="reveal">
+          <summary>Revisi dan penyesuaian</summary>
+          <p>Revisi mengikuti ruang lingkup yang disepakati. Penyesuaian tambahan akan diinformasikan terlebih dahulu.</p>
+        </details>
+
+        <div class="bottom-actions reveal">
+          <a class="btn backtop" href="#top">Kembali ke atas</a>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div class="wrap">
+        © <span id="year"></span> Konsultasi Akademik
+      </div>
+    </footer>
+  </main>
+
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+    const reveals = document.querySelectorAll(".reveal");
+    const io = new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{
+        if(e.isIntersecting){ e.target.classList.add("show"); io.unobserve(e.target); }
+      });
+    }, {threshold:.12});
+    reveals.forEach(el=>io.observe(el));
+  </script>
+</body>
+</html>`;
