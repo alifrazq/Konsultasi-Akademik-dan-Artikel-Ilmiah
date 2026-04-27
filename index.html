@@ -1,465 +1,363 @@
 <!doctype html>
-<html lang="id">
+<html lang="id" class="scroll-smooth">
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>Konsultasi Akademik</title>
   <meta name="description" content="Konsultasi dan pendampingan akademik serta artikel ilmiah dengan proses yang jelas dan komunikasi profesional." />
 
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              dark: '#070A0F',
+              teal: '#2dd4bf',
+              cyan: '#38bdf8',
+            }
+          },
+          animation: {
+            'blob': 'blob 10s infinite alternate',
+          },
+          keyframes: {
+            blob: {
+              '0%': { transform: 'translate(0px, 0px) scale(1)' },
+              '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
+              '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
+              '100%': { transform: 'translate(0px, 0px) scale(1)' },
+            }
+          }
+        }
+      }
+    }
+  </script>
+
   <style>
-    :root{
-      --bg:#070A0F;
-      --text:#F3F7FF;
-      --text-2: rgba(243,247,255,.92);
-      --teal:#2dd4bf;
-      --cyan:#38bdf8;
-      --max: 1180px;
+    /* Custom Styles for things Tailwind is too verbose for */
+    body {
+      background-color: #070A0F;
+      color: #F3F7FF;
     }
 
-    *{box-sizing:border-box}
-    html{scroll-behavior:smooth}
-    body{
-      margin:0;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
-      color:var(--text);
-      background: var(--bg);
-      overflow-x:hidden;
-      line-height:1.55;
-    }
-    a{color:inherit;text-decoration:none}
-    .wrap{max-width:var(--max);margin:0 auto;padding:0 18px}
-
-    .bg{
-      position:fixed; inset:0; z-index:-6;
-      background:
-        radial-gradient(920px 560px at 78% 18%, rgba(45,212,191,.18), transparent 62%),
-        radial-gradient(980px 620px at 18% 82%, rgba(56,189,248,.10), transparent 62%),
-        linear-gradient(180deg, #05070b, #070a0f);
-    }
-    .drift{
-      position:fixed; inset:-55%; z-index:-5;
-      background:
-        radial-gradient(circle at 35% 40%, rgba(45,212,191,.12), transparent 52%),
-        radial-gradient(circle at 70% 65%, rgba(56,189,248,.08), transparent 58%);
-      filter: blur(92px);
-      opacity:.14;
-      transform: translate3d(0,0,0);
-      animation: drift 34s ease-in-out infinite;
-      pointer-events:none;
-    }
-    @keyframes drift{
-      0%,100%{ transform: translate3d(-6px, 4px, 0) scale(1.01); }
-      50%{ transform: translate3d(6px, -6px, 0) scale(1.02); }
+    /* Subtle background mesh gradient */
+    .bg-mesh {
+      position: fixed;
+      inset: 0;
+      z-index: -10;
+      background: 
+        radial-gradient(circle at 15% 50%, rgba(45, 212, 191, 0.05), transparent 50%),
+        radial-gradient(circle at 85% 30%, rgba(56, 189, 248, 0.05), transparent 50%);
     }
 
-    header{
-      position:sticky; top:0; z-index:50;
-      backdrop-filter: blur(10px);
-      background: rgba(7,10,15,.62);
-      border-bottom: 1px solid rgba(255,255,255,.08);
+    /* Scroll Reveal Animation */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
     }
-    .head{display:flex; align-items:center; justify-content:center; padding:12px 0;}
-    .logo{display:inline-flex; align-items:center; justify-content:center; height:42px;}
-    .logo svg{height:42px;width:auto;display:block}
-
-    .hero{padding:72px 0 26px; text-align:center}
-    h1{
-      margin:14px 0 12px;
-      font-size:48px;
-      line-height:1.08;
-      letter-spacing:.6px;
-      font-weight:1000;
-      text-transform: uppercase;
-      color: var(--text);
-    }
-    @media (max-width:520px){ h1{font-size:34px} }
-
-    .sub{
-      margin:0 auto;
-      color: var(--text-2);
-      max-width: 74ch;
-      font-size: 16px;
+    .reveal.active {
+      opacity: 1;
+      transform: translateY(0);
     }
 
-    .cta{margin-top:24px; display:flex; justify-content:center;}
-
-    .btn{
-      display:inline-flex; align-items:center; justify-content:center;
-      padding:13px 20px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.16);
-      background: rgba(255,255,255,.06);
-      color: var(--text);
-      font-weight:950;
-      cursor:pointer;
-      position:relative;
-      overflow:hidden;
-      user-select:none;
-      -webkit-tap-highlight-color: transparent;
-      transition: transform .18s ease, box-shadow .18s ease, background .18s ease, border-color .18s ease;
-      will-change: transform;
+    /* Custom Details/Summary Accordion */
+    details > summary {
+      list-style: none;
     }
-
-    .btn.primary{
-      border-color: rgba(255,255,255,.10);
-      background: linear-gradient(135deg, rgba(45,212,191,.92), rgba(56,189,248,.92));
-      color:#041014;
-      box-shadow: 0 18px 55px rgba(45,212,191,.14), 0 10px 30px rgba(0,0,0,.30);
-      transform: translateZ(0);
+    details > summary::-webkit-details-marker {
+      display: none;
     }
-
-    /* Premium animated outline (mobile friendly) */
-    .btn.primary::after{
-      content:"";
-      position:absolute;
-      inset:-2px;
-      border-radius:999px;
-      padding:2px;
-      background: conic-gradient(
-        from 0deg,
-        rgba(255,255,255,0.0),
-        rgba(255,255,255,0.55),
-        rgba(255,255,255,0.0),
-        rgba(45,212,191,0.65),
-        rgba(255,255,255,0.0),
-        rgba(56,189,248,0.70),
-        rgba(255,255,255,0.0)
-      );
-      -webkit-mask:
-        linear-gradient(#000 0 0) content-box,
-        linear-gradient(#000 0 0);
-      -webkit-mask-composite: xor;
-      mask-composite: exclude;
-      opacity:.80;
-      animation: spin 3.8s linear infinite;
-      pointer-events:none;
+    details[open] summary ~ * {
+      animation: sweep .3s ease-in-out;
     }
-    @keyframes spin{ to{ transform: rotate(360deg); } }
-
-    .btn.primary::before{
-      content:"";
-      position:absolute; inset:-60%;
-      background: linear-gradient(120deg, transparent, rgba(255,255,255,.24), transparent);
-      transform: translateX(-55%) rotate(18deg);
-      opacity:0;
-      animation: sheen 6.7s ease-in-out infinite;
-      pointer-events:none;
+    @keyframes sweep {
+      0%    {opacity: 0; transform: translateY(-10px)}
+      100%  {opacity: 1; transform: translateY(0)}
     }
-    @keyframes sheen{
-      0%,72%{ transform: translateX(-55%) rotate(18deg); opacity:0; }
-      80%{ opacity:.14; }
-      100%{ transform: translateX(55%) rotate(18deg); opacity:0; }
-    }
-
-    .btn.primary:hover{
-      transform: translateY(-1px);
-      box-shadow: 0 22px 70px rgba(45,212,191,.16), 0 14px 36px rgba(0,0,0,.34);
-    }
-    .btn.primary:active{ transform: translateY(0); }
-
-    @media (max-width:520px){
-      .btn.primary::after{ animation-duration: 4.8s; opacity:.72; }
-      .btn{ padding:12px 18px; }
-    }
-
-    .section{padding:34px 0}
-    .section-title{
-      margin:0 0 8px;
-      font-size:22px;
-      font-weight:950;
-      text-align:center;
-      color: var(--text);
-    }
-    .section-desc{
-      margin:0 auto 16px;
-      color: var(--text-2);
-      text-align:center;
-      max-width: 78ch;
-      font-size:16px;
-    }
-
-    .grid{
-      display:grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 360px));
-      gap:16px;
-      margin-top: 18px;
-      justify-content:center;
-    }
-
-    .price{
-      border:1px solid rgba(255,255,255,.16);
-      border-radius: 18px;
-      background: rgba(255,255,255,.07);
-      padding:20px;
-      transition: transform .18s ease, border-color .18s ease;
-    }
-    .price:hover{ transform: translateY(-2px); border-color: rgba(45,212,191,.28); }
-
-    .tag{
-      display:inline-flex;
-      padding:7px 12px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.18);
-      background: rgba(0,0,0,.22);
-      color: var(--text-2);
-      font-size:13px;
-      text-transform: uppercase;
-      letter-spacing:.6px;
-      font-weight:900;
-    }
-    .amount{ margin:12px 0 12px; font-weight:1000; font-size:20px; color: var(--text); }
-
-    .list{
-      margin:0; padding:0; list-style:none;
-      color: var(--text-2);
-      font-size:14px;
-      display:grid; gap:9px;
-    }
-    .li{display:flex; gap:8px; align-items:flex-start}
-    .check{
-      width:18px; height:18px; border-radius:6px;
-      background: linear-gradient(135deg, var(--teal), var(--cyan));
-      color:#041014;
-      display:inline-flex; align-items:center; justify-content:center;
-      font-weight:1000; flex:0 0 auto; margin-top:1px;
-      box-shadow: 0 10px 22px rgba(45,212,191,.10);
-    }
-
-    /* APC note: no check + smaller text */
-    .note{
-      margin-top:10px;
-      font-size:12px;
-      color: rgba(243,247,255,.78);
-      letter-spacing:.2px;
-    }
-
-    details{
-      border:1px solid rgba(255,255,255,.14);
-      background: rgba(255,255,255,.05);
-      border-radius: 16px;
-      padding:12px 14px;
-      max-width:860px;
-      margin:0 auto;
-    }
-    details + details{ margin-top:10px; }
-    summary{cursor:pointer; font-weight:950; color: var(--text)}
-    details p{color: var(--text-2); margin:8px 0 0}
-
-    footer{
-      border-top:1px solid rgba(255,255,255,.10);
-      padding:22px 0 32px;
-      color: var(--text-2);
-      font-size:13px;
-      text-align:center;
-    }
-
-    .bottom-actions{display:flex; justify-content:center; padding: 18px 0 6px;}
-    .btn.backtop{
-      background: rgba(255,255,255,.10);
-      border-color: rgba(255,255,255,.18);
-      color: var(--text);
-      box-shadow:none;
-      padding:12px 18px;
-    }
-    .btn.backtop:hover{
-      background: rgba(255,255,255,.13);
-      border-color: rgba(255,255,255,.26);
-      transform: translateY(-1px);
-    }
-
-    .reveal{ opacity:0; transform: translateY(10px); transition: opacity .6s ease, transform .6s ease; }
-    .reveal.show{opacity:1; transform: translateY(0)}
-
-    @media (prefers-reduced-motion: reduce){
-      *{animation:none!important;transition:none!important}
-      html{scroll-behavior:auto}
-      .reveal{opacity:1; transform:none}
+    details[open] summary .icon-chevron {
+      transform: rotate(180deg);
     }
   </style>
 </head>
 
-<body>
-  <div class="bg" aria-hidden="true"></div>
-  <div class="drift" aria-hidden="true"></div>
+<body class="antialiased selection:bg-brand-teal selection:text-brand-dark overflow-x-hidden">
+  
+  <!-- Animated Background Elements -->
+  <div class="bg-mesh" aria-hidden="true"></div>
+  <div class="fixed top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-brand-teal/10 blur-[120px] animate-blob -z-10 pointer-events-none"></div>
+  <div class="fixed bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-brand-cyan/10 blur-[120px] animate-blob animation-delay-2000 -z-10 pointer-events-none"></div>
 
-  <header>
-    <div class="wrap head">
-      <div class="logo" aria-label="Logo">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <!-- Header / Navbar -->
+  <header class="sticky top-0 z-50 backdrop-blur-xl bg-brand-dark/70 border-b border-white/5 transition-all duration-300">
+    <div class="max-w-6xl mx-auto px-6 h-20 flex items-center justify-center">
+      <a href="#" class="inline-flex items-center group" aria-label="Logo">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" class="h-10 w-auto transform group-hover:scale-105 transition-transform duration-300">
           <defs>
             <linearGradient id="g" x1="10" y1="10" x2="54" y2="54" gradientUnits="userSpaceOnUse">
               <stop stop-color="#2DD4BF"/>
               <stop offset="1" stop-color="#38BDF8"/>
             </linearGradient>
             <filter id="s" x="-30%" y="-30%" width="160%" height="160%">
-              <feDropShadow dx="0" dy="10" stdDeviation="10" flood-color="#2DD4BF" flood-opacity="0.16"/>
+              <feDropShadow dx="0" dy="10" stdDeviation="10" flood-color="#2DD4BF" flood-opacity="0.2"/>
             </filter>
           </defs>
           <g filter="url(#s)">
-            <path d="M32 9c-12.7 0-23 10.3-23 23s10.3 23 23 23 23-10.3 23-23S44.7 9 32 9Z"
-                  fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.16)"/>
-            <path d="M21 36c6.5-10.8 15.2-16.2 25-16.2"
-                  stroke="url(#g)" stroke-width="3.2" stroke-linecap="round"/>
-            <path d="M23 40c8.1 6.5 16.8 8.4 24.8 4.3"
-                  stroke="url(#g)" stroke-width="3.2" stroke-linecap="round" opacity="0.92"/>
-            <path d="M25 26c2.2 2.2 4.9 3.2 8 3.2"
-                  stroke="rgba(56,189,248,0.9)" stroke-width="3.2" stroke-linecap="round" opacity="0.55"/>
+            <path d="M32 9c-12.7 0-23 10.3-23 23s10.3 23 23 23 23-10.3 23-23S44.7 9 32 9Z" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.1)"/>
+            <path d="M21 36c6.5-10.8 15.2-16.2 25-16.2" stroke="url(#g)" stroke-width="3.2" stroke-linecap="round"/>
+            <path d="M23 40c8.1 6.5 16.8 8.4 24.8 4.3" stroke="url(#g)" stroke-width="3.2" stroke-linecap="round" opacity="0.9"/>
+            <path d="M25 26c2.2 2.2 4.9 3.2 8 3.2" stroke="#38BDF8" stroke-width="3.2" stroke-linecap="round" opacity="0.6"/>
           </g>
         </svg>
-      </div>
+      </a>
     </div>
   </header>
 
   <main>
-    <section class="hero" id="top">
-      <div class="wrap">
-        <h1 class="reveal">Konsultasi & Pendampingan Akademik</h1>
-        <p class="sub reveal">Pendampingan terarah untuk kebutuhan akademik dan artikel ilmiah, dengan proses yang jelas dan komunikasi profesional.</p>
+    <!-- Hero Section -->
+    <section class="relative pt-32 pb-20 px-6 text-center" id="top">
+      <div class="max-w-4xl mx-auto">
+        <div class="reveal">
+          <span class="inline-block py-1 px-3 rounded-full bg-white/5 border border-white/10 text-brand-cyan text-sm font-semibold tracking-wider uppercase mb-6 shadow-lg shadow-brand-cyan/5">
+            Layanan Profesional
+          </span>
+          <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight mb-6">
+            Konsultasi & Pendampingan <br class="hidden md:block"/>
+            <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-teal to-brand-cyan">Akademik</span>
+          </h1>
+          <p class="text-slate-400 text-lg md:text-xl max-w-2xl mx-auto mb-10 leading-relaxed">
+            Pendampingan terarah untuk kebutuhan akademik dan artikel ilmiah, dengan proses yang jelas dan komunikasi profesional.
+          </p>
 
-        <div class="cta reveal" id="cta">
-          <a class="btn primary" href="https://forms.gle/PtWeAaTNycjqujRG7" target="_blank" rel="noopener">
-            Ajukan Konsultasi
+          <!-- Premium CTA Button -->
+          <div class="relative inline-flex group" id="cta">
+            <div class="absolute transition-all duration-1000 opacity-70 -inset-px bg-gradient-to-r from-brand-teal via-[#38bdf8] to-brand-teal rounded-full blur-lg group-hover:opacity-100 group-hover:-inset-1 group-hover:duration-200 animate-tilt"></div>
+            <a href="https://forms.gle/PtWeAaTNycjqujRG7" target="_blank" rel="noopener" class="relative inline-flex items-center justify-center px-8 py-4 text-base font-bold text-brand-dark transition-all duration-200 bg-gradient-to-r from-brand-teal to-brand-cyan font-pj rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-teal hover:scale-[1.02]">
+              Ajukan Konsultasi Sekarang
+              <svg class="w-5 h-5 ml-2 -mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Akademik Section (S1, S2, S3) -->
+    <section class="py-20 px-6" id="akademik">
+      <div class="max-w-6xl mx-auto">
+        <div class="text-center mb-16 reveal">
+          <h2 class="text-3xl md:text-4xl font-bold mb-4">Layanan Akademik</h2>
+          <p class="text-slate-400 max-w-2xl mx-auto">Pilihan layanan pendampingan intensif untuk penyelesaian tugas akhir Anda.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <!-- Card 1: S1 -->
+          <div class="reveal bg-white/[0.02] border border-white/10 rounded-3xl p-8 hover:bg-white/[0.04] hover:border-brand-teal/30 transition-all duration-300 hover:-translate-y-2 group">
+            <div class="inline-flex py-1.5 px-4 rounded-full bg-slate-800/50 border border-white/10 text-sm font-bold tracking-wider text-slate-300 mb-6">Skripsi — S1</div>
+            <div class="text-2xl font-extrabold text-white mb-6 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-brand-teal group-hover:to-brand-cyan transition-colors">
+              Rp 4.000.000 <span class="text-lg text-slate-500 font-medium block mt-1">– Rp 7.500.000</span>
+            </div>
+            <ul class="space-y-4 text-slate-300">
+              <li class="flex items-start gap-3"><span class="text-brand-teal mt-0.5"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></span> Revisi terstruktur</li>
+              <li class="flex items-start gap-3"><span class="text-brand-teal mt-0.5"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></span> Turnitin 1x (target &lt;15%)</li>
+              <li class="flex items-start gap-3"><span class="text-brand-teal mt-0.5"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></span> Pendampingan secara daring</li>
+              <li class="flex items-start gap-3"><span class="text-brand-teal mt-0.5"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></span> Bimbingan sesuai scope</li>
+            </ul>
+          </div>
+
+          <!-- Card 2: S2 (Highlighted) -->
+          <div class="reveal relative bg-gradient-to-b from-brand-teal/[0.08] to-transparent border border-brand-teal/20 rounded-3xl p-8 hover:border-brand-teal/50 transition-all duration-300 hover:-translate-y-2 group">
+            <div class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-gradient-to-r from-brand-teal to-brand-cyan text-brand-dark font-bold text-xs px-3 py-1 rounded-full shadow-lg">Populer</div>
+            <div class="inline-flex py-1.5 px-4 rounded-full bg-brand-teal/10 border border-brand-teal/20 text-sm font-bold tracking-wider text-brand-teal mb-6">Thesis — S2</div>
+            <div class="text-2xl font-extrabold text-white mb-6">
+              Rp 8.000.000 <span class="text-lg text-slate-500 font-medium block mt-1">– Rp 14.500.000</span>
+            </div>
+            <ul class="space-y-4 text-slate-300">
+              <li class="flex items-start gap-3"><span class="text-brand-teal mt-0.5"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></span> Revisi terstruktur</li>
+              <li class="flex items-start gap-3"><span class="text-brand-teal mt-0.5"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></span> Turnitin 1x (target &lt;15%)</li>
+              <li class="flex items-start gap-3"><span class="text-brand-teal mt-0.5"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></span> Pendampingan secara daring</li>
+              <li class="flex items-start gap-3"><span class="text-brand-teal mt-0.5"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></span> Bimbingan sesuai scope</li>
+            </ul>
+          </div>
+
+          <!-- Card 3: S3 -->
+          <div class="reveal bg-white/[0.02] border border-white/10 rounded-3xl p-8 hover:bg-white/[0.04] hover:border-brand-cyan/30 transition-all duration-300 hover:-translate-y-2 group">
+            <div class="inline-flex py-1.5 px-4 rounded-full bg-slate-800/50 border border-white/10 text-sm font-bold tracking-wider text-slate-300 mb-6">Disertasi — S3</div>
+            <div class="text-2xl font-extrabold text-white mb-6 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-brand-teal group-hover:to-brand-cyan transition-colors">
+              Rp 15.000.000 <span class="text-lg text-slate-500 font-medium block mt-1">– Rp 30.000.000</span>
+            </div>
+            <ul class="space-y-4 text-slate-300">
+              <li class="flex items-start gap-3"><span class="text-brand-teal mt-0.5"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></span> Revisi terstruktur</li>
+              <li class="flex items-start gap-3"><span class="text-brand-teal mt-0.5"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></span> Turnitin 1x (target &lt;15%)</li>
+              <li class="flex items-start gap-3"><span class="text-brand-teal mt-0.5"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></span> Pendampingan secara daring</li>
+              <li class="flex items-start gap-3"><span class="text-brand-teal mt-0.5"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></span> Bimbingan sesuai scope</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Artikel Ilmiah Section -->
+    <section class="py-20 px-6 relative" id="artikel">
+      <div class="max-w-4xl mx-auto">
+        <div class="text-center mb-16 reveal">
+          <h2 class="text-3xl md:text-4xl font-bold mb-4">Artikel Ilmiah</h2>
+          <p class="text-slate-400 max-w-2xl mx-auto">Pendampingan publikasi untuk target jurnal nasional maupun internasional.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <!-- SINTA -->
+          <div class="reveal bg-white/[0.02] border border-white/10 rounded-3xl p-8 hover:bg-white/[0.04] hover:border-white/20 transition-all duration-300 group">
+            <div class="flex justify-between items-center mb-6">
+              <div class="inline-flex py-1.5 px-4 rounded-full bg-slate-800/50 border border-white/10 text-sm font-bold tracking-wider text-slate-300">Jurnal SINTA</div>
+              <svg class="w-8 h-8 text-slate-500 opacity-50 group-hover:text-brand-teal group-hover:opacity-100 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10l6 6v10a2 2 0 01-2 2z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14 4v6h6M10 12h4m-4 4h4"></path></svg>
+            </div>
+            <div class="text-2xl font-extrabold text-white mb-6">
+              Rp 500.000 <span class="text-lg text-slate-500 font-medium block mt-1">– Rp 3.000.000</span>
+            </div>
+            <ul class="space-y-4 text-slate-300 mb-6">
+              <li class="flex items-start gap-3"><span class="text-brand-teal mt-0.5"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></span> Revisi terstruktur</li>
+              <li class="flex items-start gap-3"><span class="text-brand-teal mt-0.5"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></span> Turnitin 1x</li>
+              <li class="flex items-start gap-3"><span class="text-brand-teal mt-0.5"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></span> Analisis data sesuai scope</li>
+              <li class="flex items-start gap-3"><span class="text-brand-teal mt-0.5"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></span> Pendampingan submit ke jurnal target</li>
+            </ul>
+            <div class="text-xs text-slate-500 bg-slate-900/50 inline-block px-3 py-1.5 rounded-md border border-slate-800">* Biaya APC (Article Processing Charge) tidak termasuk</div>
+          </div>
+
+          <!-- SCOPUS -->
+          <div class="reveal bg-white/[0.02] border border-white/10 rounded-3xl p-8 hover:bg-white/[0.04] hover:border-white/20 transition-all duration-300 group">
+            <div class="flex justify-between items-center mb-6">
+              <div class="inline-flex py-1.5 px-4 rounded-full bg-slate-800/50 border border-white/10 text-sm font-bold tracking-wider text-slate-300">Jurnal SCOPUS</div>
+              <svg class="w-8 h-8 text-slate-500 opacity-50 group-hover:text-brand-cyan group-hover:opacity-100 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path></svg>
+            </div>
+            <div class="text-2xl font-extrabold text-white mb-6">
+              Rp 7.500.000 <span class="text-lg text-slate-500 font-medium block mt-1">– Rp 25.000.000</span>
+            </div>
+            <ul class="space-y-4 text-slate-300 mb-6">
+              <li class="flex items-start gap-3"><span class="text-brand-teal mt-0.5"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></span> Revisi terstruktur</li>
+              <li class="flex items-start gap-3"><span class="text-brand-teal mt-0.5"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></span> Turnitin 1x</li>
+              <li class="flex items-start gap-3"><span class="text-brand-teal mt-0.5"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></span> Analisis data sesuai scope</li>
+              <li class="flex items-start gap-3"><span class="text-brand-teal mt-0.5"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></span> Pendampingan submit ke jurnal target</li>
+            </ul>
+            <div class="text-xs text-slate-500 bg-slate-900/50 inline-block px-3 py-1.5 rounded-md border border-slate-800">* Biaya APC (Article Processing Charge) tidak termasuk</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Syarat & Ketentuan -->
+    <section class="py-20 px-6" id="ketentuan">
+      <div class="max-w-3xl mx-auto">
+        <div class="text-center mb-12 reveal">
+          <h2 class="text-3xl md:text-4xl font-bold mb-4">Syarat & Ketentuan</h2>
+          <p class="text-slate-400">Ringkasan informasi untuk menjaga kejelasan proses kerjasama.</p>
+        </div>
+
+        <div class="space-y-4">
+          <!-- Accordion 1 -->
+          <details class="reveal group bg-white/[0.03] border border-white/10 rounded-2xl p-5 hover:bg-white/[0.05] transition-colors cursor-pointer">
+            <summary class="flex justify-between items-center font-bold text-lg outline-none text-white">
+              Proses dan Konfirmasi
+              <svg class="icon-chevron w-5 h-5 text-slate-400 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+            </summary>
+            <div class="mt-4 text-slate-400 leading-relaxed pr-8">
+              Pengajuan dilakukan melalui Google Form (Ajukan Konsultasi). Ruang lingkup dan timeline disepakati sebelum pendampingan dimulai.
+            </div>
+          </details>
+
+          <!-- Accordion 2 -->
+          <details class="reveal group bg-white/[0.03] border border-white/10 rounded-2xl p-5 hover:bg-white/[0.05] transition-colors cursor-pointer">
+            <summary class="flex justify-between items-center font-bold text-lg outline-none text-white">
+              Ketentuan Pembayaran
+              <svg class="icon-chevron w-5 h-5 text-slate-400 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+            </summary>
+            <div class="mt-4 text-slate-400 leading-relaxed pr-8 space-y-2">
+              <p>Pembayaran dilakukan dalam tiga tahap dengan rincian sebagai berikut:</p>
+              <ul class="list-disc pl-5 space-y-1 text-slate-300">
+                <li><strong class="text-white">Tahap 1 (DP):</strong> Sebesar 30% dari total biaya, dibayarkan di awal sebelum pengerjaan dimulai.</li>
+                <li><strong class="text-white">Tahap 2 (Progress):</strong> Sebesar 60% (akumulasi 90%) setelah naskah selesai dengan kesepakatan - sebelum ujian.</li>
+                <li><strong class="text-white">Tahap 3 (Pelunasan):</strong> Sisa 10% dibayarkan saat pengerjaan dinyatakan selesai (Draft Final).</li>
+              </ul>
+            </div>
+          </details>
+
+          <!-- Accordion 3 -->
+          <details class="reveal group bg-white/[0.03] border border-white/10 rounded-2xl p-5 hover:bg-white/[0.05] transition-colors cursor-pointer">
+            <summary class="flex justify-between items-center font-bold text-lg outline-none text-white">
+              Komunikasi dan Durasi
+              <svg class="icon-chevron w-5 h-5 text-slate-400 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+            </summary>
+            <div class="mt-4 text-slate-400 leading-relaxed pr-8">
+              Pendampingan dilakukan sepenuhnya secara daring. Estimasi durasi penyelesaian mengikuti tingkat kompleksitas penelitian dan kesiapan data dari pihak Anda.
+            </div>
+          </details>
+
+          <!-- Accordion 4 -->
+          <details class="reveal group bg-white/[0.03] border border-white/10 rounded-2xl p-5 hover:bg-white/[0.05] transition-colors cursor-pointer">
+            <summary class="flex justify-between items-center font-bold text-lg outline-none text-white">
+              Revisi dan Penyesuaian Tambahan
+              <svg class="icon-chevron w-5 h-5 text-slate-400 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+            </summary>
+            <div class="mt-4 text-slate-400 leading-relaxed pr-8">
+              Revisi dilakukan mengikuti ruang lingkup yang telah disepakati di awal. Apabila terdapat penyesuaian tambahan di luar kesepakatan awal, biayanya akan diinformasikan terlebih dahulu.
+            </div>
+          </details>
+        </div>
+
+        <div class="text-center mt-12 reveal">
+          <a href="#top" class="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 transition-colors text-sm font-medium">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg>
+            Kembali ke atas
           </a>
         </div>
       </div>
     </section>
 
-    <section class="section" id="akademik">
-      <div class="wrap">
-        <div class="reveal">
-          <h2 class="section-title">Akademik</h2>
-          <p class="section-desc">Pilihan layanan untuk Skripsi (S1), Thesis (S2), dan Disertasi (S3).</p>
-        </div>
-
-        <div class="grid">
-          <div class="price reveal">
-            <div class="tag">Skripsi — S1</div>
-            <div class="amount">Rp. 4.000.000 – Rp. 7.500.000</div>
-            <ul class="list">
-              <li class="li"><span class="check">✓</span>Revisi terstruktur</li>
-              <li class="li"><span class="check">✓</span>Turnitin 1x (target &lt;15%)</li>
-              <li class="li"><span class="check">✓</span>Pendampingan secara daring</li>
-              <li class="li"><span class="check">✓</span>Bimbingan sesuai scope</li>
-            </ul>
-          </div>
-
-          <div class="price reveal">
-            <div class="tag">Thesis — S2</div>
-            <div class="amount">Rp. 8.000.000 – Rp. 14.500.000</div>
-            <ul class="list">
-              <li class="li"><span class="check">✓</span>Revisi terstruktur</li>
-              <li class="li"><span class="check">✓</span>Turnitin 1x (target &lt;15%)</li>
-              <li class="li"><span class="check">✓</span>Pendampingan secara daring</li>
-              <li class="li"><span class="check">✓</span>Bimbingan sesuai scope</li>
-            </ul>
-          </div>
-
-          <div class="price reveal">
-            <div class="tag">Disertasi — S3</div>
-            <div class="amount">Rp. 15.000.000 – Rp. 30.000.000</div>
-            <ul class="list">
-              <li class="li"><span class="check">✓</span>Revisi terstruktur</li>
-              <li class="li"><span class="check">✓</span>Turnitin 1x (target &lt;15%)</li>
-              <li class="li"><span class="check">✓</span>Pendampingan secara daring</li>
-              <li class="li"><span class="check">✓</span>Bimbingan sesuai scope</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="artikel">
-      <div class="wrap">
-        <div class="reveal">
-          <h2 class="section-title">Artikel Ilmiah</h2>
-          <p class="section-desc">Pendampingan untuk target jurnal SINTA atau SCOPUS sesuai target Anda.</p>
-        </div>
-
-        <div class="grid">
-          <div class="price reveal">
-            <div class="tag">SINTA</div>
-            <div class="amount">Rp. 500.000 – Rp. 3.000.000</div>
-            <ul class="list">
-              <li class="li"><span class="check">✓</span>Revisi terstruktur</li>
-              <li class="li"><span class="check">✓</span>Turnitin 1x</li>
-              <li class="li"><span class="check">✓</span>Analisis data sesuai scope</li>
-              <li class="li"><span class="check">✓</span>Pendampingan submit ke jurnal target</li>
-            </ul>
-            <div class="note">*APC tidak termasuk</div>
-          </div>
-
-          <div class="price reveal">
-            <div class="tag">SCOPUS</div>
-            <div class="amount">Rp. 7.500.000 – Rp. 25.000.000</div>
-            <ul class="list">
-              <li class="li"><span class="check">✓</span>Revisi terstruktur</li>
-              <li class="li"><span class="check">✓</span>Turnitin 1x</li>
-              <li class="li"><span class="check">✓</span>Analisis data sesuai scope</li>
-              <li class="li"><span class="check">✓</span>Pendampingan submit ke jurnal target</li>
-            </ul>
-            <div class="note">*APC tidak termasuk</div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="ketentuan">
-      <div class="wrap">
-        <div class="reveal">
-          <h2 class="section-title">Terms & Conditions</h2>
-          <p class="section-desc">Ringkasan untuk menjaga kejelasan proses.</p>
-        </div>
-
-        <details class="reveal">
-          <summary>Proses dan konfirmasi</summary>
-          <p>Pengajuan dilakukan melalui Google Form (Ajukan Konsultasi). Ruang lingkup dan timeline disepakati sebelum pendampingan dimulai.</p>
-        </details>
-
-        <details class="reveal">
-          <summary>Ketentuan Pembayaran</summary>
-          <p>Pembayaran dilakukan dalam dua tahap dengan rincian sebagai berikut:</p>
-          <p>a. Tahap 1 (Uang Muka/DP): Sebesar 30% dari total biaya, dibayarkan di awal sebelum pengerjaan dimulai.</p>
-          <p>b. Tahap 2 (Finish): Sebesar 90% (setelah naskah sudah selesai dengan adanya kesepakatan - sebelum ujian).</p>
-          <p>c. Tahap 3 (Pelunasan): 100% dibayarkan saat pengerjaan telah dinyatakan selesai (Draft Final).</p>
-        </details>
-
-        <details class="reveal">
-          <summary>Komunikasi dan durasi</summary>
-          <p>Pendampingan dilakukan secara daring. Estimasi durasi mengikuti kompleksitas dan kesiapan data.</p>
-        </details>
-
-        <details class="reveal">
-          <summary>Revisi dan penyesuaian</summary>
-          <p>Revisi mengikuti ruang lingkup yang disepakati. Penyesuaian tambahan akan diinformasikan terlebih dahulu.</p>
-        </details>
-
-        <div class="bottom-actions reveal">
-          <a class="btn backtop" href="#cta">Kembali ke atas</a>
-        </div>
-      </div>
-    </section>
-
-    <footer>
-      <div class="wrap">
-        © <span id="year">
+    <!-- Footer -->
+    <footer class="border-t border-white/10 py-10 mt-10">
+      <div class="max-w-6xl mx-auto px-6 text-center text-slate-500 text-sm">
+        <p>&copy; <span id="year"></span> Konsultasi Akademik. All rights reserved.</p>
+        <p class="mt-2 text-slate-600 text-xs">Profesional • Terpercaya • Tepat Waktu</p>
       </div>
     </footer>
   </main>
 
   <script>
+    // Set Tahun Copyright secara Otomatis
     document.getElementById("year").textContent = new Date().getFullYear();
+
+    // Intersection Observer untuk Animasi Fade-up saat Scroll
     const reveals = document.querySelectorAll(".reveal");
-    const io = new IntersectionObserver((entries)=>{
-      entries.forEach(e=>{
-        if(e.isIntersecting){ e.target.classList.add("show"); io.unobserve(e.target); }
+    const revealOptions = {
+      threshold: 0.15,
+      rootMargin: "0px 0px -50px 0px"
+    };
+
+    const revealOnScroll = new IntersectionObserver(function(entries, observer) {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) {
+          return;
+        } else {
+          entry.target.classList.add("active");
+          observer.unobserve(entry.target); // Animasi hanya berjalan sekali
+        }
       });
-    }, {threshold:.12});
-    reveals.forEach(el=>io.observe(el));
+    }, revealOptions);
+
+    reveals.forEach(reveal => {
+      revealOnScroll.observe(reveal);
+    });
   </script>
 </body>
 </html>
-
-
-
-
-
